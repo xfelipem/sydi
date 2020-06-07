@@ -1,2 +1,0 @@
-# sydi
-Created with CodeSandbox
