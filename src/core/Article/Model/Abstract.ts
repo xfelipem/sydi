@@ -1,4 +1,4 @@
-type ArticleAbstract = string;
+export type ArticleAbstract = string;
 
 interface AbstractProps {
   value: ArticleAbstract;
@@ -10,6 +10,10 @@ export class Abstract {
   static create(abstract: ArticleAbstract): Abstract {
     this.validateAbstract(abstract);
     return new Abstract({ value: abstract });
+  }
+
+  get value(): ArticleAbstract {
+    return this.props.value;
   }
 
   private static validateAbstract(abstract: ArticleAbstract): void {

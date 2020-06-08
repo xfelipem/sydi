@@ -1,16 +1,20 @@
 import { ArticleRepositoryInterface } from "../Contract/ArticleRepositoryInterface";
 import { Article } from "../Model/Article";
+import { Title } from "../Model/Title";
 
-export class ArticlePersistenceRepository
-  implements ArticleRepositoryInterface {
+export class ArticlePersistenceRepository implements ArticleRepositoryInterface {
   private articles: Article[] = [];
-  async create(newArticle: Article) {
+
+  async add(newArticle: Article) {
     this.articles.push(newArticle);
   }
-  async getArticleByID(id: number): Promise<Article | undefined> {
-    return this.articles.find((article: Article) => {
-      if (article.getId() === id) return article;
+
+  async getArticleByTitle(title: Title): Promise<Article | null> {
+    const article = this.articles.find((storedArticle: Article) => {
+      if (title.isEqual(storedArticle.title)) return storedArticle;
       return false;
-    });
+    })
+
+    return article || null;
   }
 }

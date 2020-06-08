@@ -1,6 +1,7 @@
 import { Article } from "../Model/Article";
+import { Title } from "../Model/Title";
 
 export interface ArticleRepositoryInterface {
-  create: (article: Article) => Promise<void>;
-  getArticleByID: (id: number) => Promise<Article>;
+  add: (article: Article) => Promise<void>;
+  getArticleByTitle: (title: Title) => Promise<Article | null>;
 }
