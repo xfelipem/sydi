@@ -15,38 +15,32 @@ describe("Given a PublishArticle use case", () => {
       "Esta es la idea que vamos a intentar comprobar en el content";
     const content = "Contenido fundamentado, relacionado a sources";
     const sources = ["fuente 1", "fuente 2"];
+    const protoArticle = { title, abstract, content, sources };
 
     const publishArticle = new PublishArticleUseCase(articleService);
 
-    await publishArticle.execute({ title, abstract, content, sources });
+    await publishArticle.execute(protoArticle);
 
-    const persistenceArticle = await articlePersistenceRepository.getArticleByID(
-      newArticle.getId()
-    );
+    const persistenceArticle = await articleService.getArticleByTitle(title);
 
-    expect(newArticle).toBe(persistenceArticle);
+    expect(persistenceArticle.abstract.value).toBe(protoArticle.abstract);
+    expect(persistenceArticle.content.value).toBe(protoArticle.content);
+    expect(persistenceArticle.sources.value.map(source => source.value)).toStrictEqual(protoArticle.sources);
+    expect(persistenceArticle.title.value).toBe(protoArticle.title);
   });
 
-  // test(`
-  //   when an article with invalid title, abstract, content and sources,
-  //   is provided during execution, then should create an Article in persistence.
-  // `, async () => {
-  //   const title = "";
-  //   const abstract = "";
-  //   const content = "";
-  //   const sources: any[] = [];
-  //   const newArticle = new Article({ title, abstract, content, sources });
-  //   const articlePersistenceRepository = new ArticlePersistenceRepository();
-  //   const publishArticle = new PublishArticleUseCase(
-  //     articlePersistenceRepository
-  //   );
+  test(`
+    when an article with invalid title, abstract, content and sources,
+    is provided during execution, then should throw an error.
+  `, async () => {
+    const title = "";
+    const abstract = "";
+    const content = "";
+    const sources: any[] = [];
+    const protoArticle = { title, abstract, content, sources };
 
-  //   await publishArticle.execute(newArticle);
+    const publishArticle = new PublishArticleUseCase(articleService);
 
-  //   const persistenceArticle = await articlePersistenceRepository.getArticleByID(
-  //     newArticle.getId()
-  //   );
-
-  //   expect(newArticle).toBe(persistenceArticle);
-  // });
+    expect(publishArticle.execute(protoArticle)).rejects.toThrowError();
+  });
 });
